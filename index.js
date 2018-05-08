@@ -1,10 +1,20 @@
 (() => {
-  const hive = [
-    [1, 1, 1, 0, 1, 0, 0, 1],
-    [0, 1, 0, 1, 1, 1, 0, 1],
-    [1, 1, 1, 1, 1, 0, 0, 1],
-    [0, 0, 1, 0, 1, 1, 1, 1],
-  ]
+  let rows = 12
+
+  const hive = (() => {
+    const grid = []
+    while (rows--) {
+      const row = []
+      let cols = 36
+      while (cols--) {
+        row.push(
+          Math.random() > 0.2
+        )
+      }
+      grid.push(row)
+    }
+    return grid
+  })()
 
   const drawHive = (hive) => {
     // This will mirror the hive.
