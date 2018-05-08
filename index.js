@@ -1,13 +1,10 @@
 (() => {
   const hive = [
-    [1, 1, 1, 0],
-    [0, 1, 0, 1],
-    [1, 1, 1, 1],
-    [0, 0, 1, 0],
+    [1, 1, 1, 0, 1, 0, 0, 1],
+    [0, 1, 0, 1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 1, 0, 0, 1],
+    [0, 0, 1, 0, 1, 1, 1, 1],
   ]
-
-  console.log(hive)
-
 
   const drawHive = (hive) => {
     const cellFactory = (filled) => {
@@ -23,12 +20,14 @@
     const root = document.querySelector('#hive')
 
     const size = 50
+    const padding = 2
 
     hive.forEach((row, rowIndex) => {
       row.forEach((value, columnIndex) => {
         const cell = cellFactory(!!value)
-        const x = columnIndex * 3 / 4 * size
-        const y = rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * -size) : 0)
+        const x = (columnIndex * 3 / 4 * size) + padding * columnIndex
+        const y = (rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * size) : 0))
+          + padding * rowIndex
         cell.style.left = x + 'px'
         cell.style.top = y + 'px'
         root.append(cell)
