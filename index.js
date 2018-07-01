@@ -1,14 +1,14 @@
 const honeyCanvas = (() => {
-  let rows = 12
-
+  // ((rowNum, colNum, rowCondition, paddingNum, sizeNum) => {
+  let rows = rowNum
   const hive = (() => {
     const grid = []
     while (rows--) {
       const row = []
-      let cols = 36
+      let cols = colNum
       while (cols--) {
         row.push(
-          Math.random() > 0.2
+          Math.random() > rowCondition
         )
       }
       grid.push(row)
@@ -118,8 +118,8 @@ const honeyCanvas = (() => {
 
     const root = document.querySelector('#hive')
 
-    const size = 50
-    const padding = 2
+    const padding = paddingNum
+    const size = sizeNum
 
     hive.forEach((row, rowIndex) => {
       const elementRow = []
@@ -148,3 +148,5 @@ const honeyCanvas = (() => {
   };
 
 })()
+//   drawHive(hive)
+// })(12, 36, 0.2, 0, 50)
