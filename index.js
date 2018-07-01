@@ -1,5 +1,5 @@
-const honeyCanvas = (() => {
-  // ((rowNum, colNum, rowCondition, paddingNum, sizeNum) => {
+// const honeyCanvas = (() => {
+const honeyCanvas = ((rowNum, colNum, rowCondition, paddingNum, sizeNum) => {
   let rows = rowNum
   const hive = (() => {
     const grid = []
@@ -147,6 +147,8 @@ const honeyCanvas = (() => {
     init: init
   };
 
-})()
+// })()
 //   drawHive(hive)
-// })(12, 36, 0.2, 0, 50)
+})(12, 36, 0.2, 0, 50)
+// (3, 3, 0, 0, 50)     // big hexagon,  3x3
+// (1, 1, 0, 0, 50)     // small hexagon 1x1
