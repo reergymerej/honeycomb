@@ -138,4 +138,7 @@
   }
 
   drawHive(hive)
-})(12, 36, 0.2, 0, 50)
+})
+(12, 36, 0.2, 0, 50) // // normal,       12x36 and random condition.
+// (3, 3, 0, 0, 50)     // big hexagon,  3x3
+// (1, 1, 0, 0, 50)     // small hexagon 1x1
