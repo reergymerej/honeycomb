@@ -1,4 +1,4 @@
-(() => {
+const honeyCanvas = (() => {
   let rows = 12
 
   const hive = (() => {
@@ -137,5 +137,14 @@
     })
   }
 
-  drawHive(hive)
+  console.log(true)
+  function init() {
+    drawHive(hive)
+    console.log(false)
+  }
+
+  return {
+    init: init
+  };
+
 })()
