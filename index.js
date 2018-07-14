@@ -123,20 +123,24 @@ const honeyCanvas = (() => {
       const padding = paddingNum
       const size = sizeNum
 
-      hive.forEach((row, rowIndex) => {
-        const elementRow = []
-        row.forEach((value, columnIndex) => {
-          const cell = cellFactory(!!value, columnIndex, rowIndex)
-          const x = (columnIndex * 3 / 4 * size) + padding * columnIndex
-          const y = (rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * size) : 0)) +
-            padding * rowIndex
-          cell.style.left = x + 'px'
-          cell.style.top = y + 'px'
-          elementRow.push(cell)
-          root.append(cell)
+      const penToPaper = ((hive, cellFactory, size, padding, root, elements) => {
+        hive.forEach((row, rowIndex) => {
+          const elementRow = []
+          row.forEach((value, columnIndex) => {
+            const cell = cellFactory(!!value, columnIndex, rowIndex)
+            const x = (columnIndex * 3 / 4 * size) + padding * columnIndex
+            const y = (rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * size) : 0)) +
+              padding * rowIndex
+            cell.style.left = x + 'px'
+            cell.style.top = y + 'px'
+            elementRow.push(cell)
+            root.append(cell)
+          })
+          elements.push(elementRow)
         })
-        elements.push(elementRow)
       })
+      penToPaper(hive, cellFactory, size, padding, root, elements)
+
     }
     return {
       hive: hive,
