@@ -144,7 +144,11 @@ const honeyCanvas = ((rowNum, colNum, rowCondition, paddingNum, sizeNum) => {
   }
 
   return {
-    init: init
+    init: init,
+    realLife:     {rowNum: 12, colNum: 36, rowCondition: 0.2, paddingNum: 0, sizeNum: 50},
+    normal:       {rowNum: 12, colNum: 36, rowCondition: 0,   paddingNum: 0, sizeNum: 50},
+    bigHexagon:   {rowNum: 3,  colNum: 3,  rowCondition: 0,   paddingNum: 0, sizeNum: 50},
+    smallHexagon: {rowNum: 1,  colNum: 1,  rowCondition: 0,   paddingNum: 0, sizeNum: 50},
   };
 
 // })()
