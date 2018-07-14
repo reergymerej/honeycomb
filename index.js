@@ -21,11 +21,11 @@ const honeyCanvas = (() => {
     const drawHive = (hive) => {
       // This will mirror the hive.
       const elements = []
-
       const getIntAttr = (element, attr) => {
         return parseInt(element.getAttribute(attr))
       }
 
+      // inputs, dependencies pattern.
       const getCoordsFromElement = (element) => {
         const columnIndex = getIntAttr(element, 'data-columnIndex')
         const rowIndex = getIntAttr(element, 'data-rowIndex')
@@ -90,7 +90,6 @@ const honeyCanvas = (() => {
         element.className = element.className.split(' ').filter(x => x !== className).join(' ')
       }
 
-
       const handleCellMouseOut = (event) => {
         const target = event.target
         const coords = getCoordsFromElement(target)
@@ -104,10 +103,7 @@ const honeyCanvas = (() => {
 
       const cellFactory = (filled, columnIndex, rowIndex) => {
         const div = document.createElement('div')
-        const className = 'cell' + (filled ?
-          ' filled' :
-          ''
-        )
+        const className = 'cell' + (filled ? ' filled' : '')
         div.className = className
         if (filled) {
           div.addEventListener('mouseover', handleCellMouseOver)
@@ -119,7 +115,6 @@ const honeyCanvas = (() => {
       }
 
       const root = document.querySelector('#hive')
-
       const padding = paddingNum
       const size = sizeNum
 
