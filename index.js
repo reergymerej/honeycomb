@@ -1,7 +1,7 @@
 const honeyCanvas = (() => {
   console.log(true)
 
-  function init({rowNum, colNum, rowCondition, paddingNum, sizeNum}) {
+  function playground({rowNum, colNum, rowCondition, paddingNum, sizeNum}) {
     let rows = rowNum
     const hive = (() => {
       const grid = []
@@ -138,8 +138,16 @@ const honeyCanvas = (() => {
         elements.push(elementRow)
       })
     }
-    drawHive(hive)
+    return {
+      hive: hive,
+      drawHive: drawHive
+    }
     console.log(false)
+  }
+  function init(preset) {
+    let p = playground(preset);
+    let hivey = p.hive;
+    p.drawHive(hivey);
   }
 
   return {
