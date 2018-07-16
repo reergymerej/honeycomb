@@ -1,4 +1,4 @@
-(() => {
+const honeycomb = (() => {
   let rows = 12
 
   const hive = (() => {
@@ -137,5 +137,13 @@
     })
   }
 
-  drawHive(hive)
+
+  return {
+    SMALL: 'so tiny',
+    init(...args) {
+      console.log('init with', args)
+      // throw new Error('send me your params, sucker!')
+      drawHive(hive)
+    }
+  }
 })()
