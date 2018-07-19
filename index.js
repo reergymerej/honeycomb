@@ -19,13 +19,27 @@ const honeyCanvas = (() => {
     })()
     const drawHive = (hive) => {// This will mirror the hive.
       const elements = []
+      const root = document.querySelector('#hive')
+      const padding = paddingNum
+      const size = sizeNum
+
+
+      const addClass = ({inputs, dependencies}) => { // external functions: global:indexOf
+        element=inputs.target;
+        className=inputs.value;
+        console.log('frog says so, ', inputs, dependencies)
+        if (element.className.indexOf(className) === -1) {
+          element.className += (' ' + className) } }
+      const removeClass = ({inputs, dependencies}) => {  // external functions: global: split, filter, join
+        element=inputs.target;
+        className=inputs.value;
+        element.className = element.className.split(' ').filter(x => x !== className).join(' ') }
       const getElementFromCoords = ({input: coords, dependencies}) => { // external functions: non global: elements, done,
         console.log(coords, dependencies)
         const row = dependencies.elements[coords.y]
         if (row) { const element = row[coords.x]; return element }
       }
       const getIntAttr = (element, attr) => { return parseInt(element.getAttribute(attr)) } // external functions: done, global functions parseInt, getAttribute
-
       const getCoordsFromElement = ({input: element, dependencies: getIntAttr}) => { // external functions: non global: getIntAttr
         const columnIndex = getIntAttr(element, 'data-columnIndex'); const rowIndex = getIntAttr(element, 'data-rowIndex')
         return { x: columnIndex, y: rowIndex } }
@@ -43,29 +57,24 @@ const honeyCanvas = (() => {
           getElementFromCoords({ input: { x: ex, y: sy }, dependencies: {elements} }), // SE
         ].filter(x => !!x) }
 
-      const addClass = ({inputs, dependencies}) => { // external functions: global:indexOf
-        element=inputs.target;
-        className=inputs.value;
-        console.log('frog says so, ', inputs, dependencies)
-        if (element.className.indexOf(className) === -1) {
-          element.className += (' ' + className) }
-      }
-      const handleCellMouseOver = (event) => { // external functions: getCoordsFromElement, addClass, getAdjacentCells
+
+      const handleCellMouseOver = (event) => { // external functions: getCoordsFromElement, getAdjacentCells, addClass
         const target = event.target;
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
         addClass({ inputs: {target:target, value:'hover'}, dependencies: 'test'} )
         const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
         adjacentCells.forEach(cell => { addClass({ inputs:{target:cell, value:'adjacent'},dependencies: 'test'}) })
       }
-      const removeClass = (element, className) => { // external functions: split, filter, join
-        element.className = element.className.split(' ').filter(x => x !== className).join(' ') }
 
-      const handleCellMouseOut = (event) => { // external functions: getCoordsFromElement, removeClass, getAdjacentCells
+      const handleCellMouseOut = (event) => { // external functions: removeClass, getCoordsFromElement, getAdjacentCells
         const target = event.target
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
-        removeClass(target, 'hover')
+
+        removeClass({ inputs: {target:target, value:'hover'}, dependencies: 'test'})
         const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
-        adjacentCells.forEach(cell => { removeClass(cell, 'adjacent') })
+        adjacentCells.forEach(cell => {
+          removeClass({ inputs:{target:cell, value:'adjacent'},dependencies: 'test'})
+        })
       }
       const cellFactory = (filled, columnIndex, rowIndex) => { // external functions: handleCellMouseOver, handleCellMouseOut
         const div = document.createElement('div')
@@ -79,9 +88,7 @@ const honeyCanvas = (() => {
         div.setAttribute('data-rowIndex', rowIndex)
         return div
       }
-      const root = document.querySelector('#hive')
-      const padding = paddingNum
-      const size = sizeNum
+
       const penToPaper = ((hive, cellFactory, size, padding, root, elements) => {
         hive.forEach((row, rowIndex) => {
           const elementRow = []
