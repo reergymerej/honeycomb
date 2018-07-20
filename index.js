@@ -39,13 +39,14 @@ const honeyCanvas = (() => {
         const row = dependencies.elements[coords.y]
         if (row) { const element = row[coords.x]; return element }
       }
-      const getIntAttr = (element, attr) => { return parseInt(element.getAttribute(attr)) } // external functions: done, global functions parseInt, getAttribute
+      const getIntAttr = ({input: {element, attr}}) => { return parseInt(element.getAttribute(attr)) } // external functions: done, global functions parseInt, getAttribute
 
       const getCoordsFromElement = ({input: element, dependencies: getIntAttr}) => { // external functions: non global: getIntAttr
-        const columnIndex = getIntAttr(element, 'data-columnIndex'); const rowIndex = getIntAttr(element, 'data-rowIndex')
+        const columnIndex = getIntAttr({input: {element: element, attr: 'data-columnIndex'}});
+        const rowIndex = getIntAttr({input: {element: element, attr: 'data-rowIndex'}})
         return { x: columnIndex, y: rowIndex } }
 
-      const getAdjacentCells = ({input: coords, dependencies: getElementFromCoords}) => { // external functions: non global: getElementFromCoords, global: filter
+      const getAdjacentCells = ({input: {coords}, dependencies: {getElementFromCoords}}) => { // external functions: non global: getElementFromCoords, global: filter
         const x = coords.x; const y = coords.y; const n = y - 1;
         const s = y + 1; const wx = x - 1; const ex = x + 1;
         const ny = x % 2 === 1 ? y : n; const sy = x % 2 === 1 ? s : y;
@@ -56,13 +57,14 @@ const honeyCanvas = (() => {
           getElementFromCoords({ input: { x: ex, y: ny }, dependencies: {elements} }), // NE
           getElementFromCoords({ input: { x: wx, y: sy }, dependencies: {elements} }), // SW
           getElementFromCoords({ input: { x: ex, y: sy }, dependencies: {elements} }), // SE
-        ].filter(x => !!x) }
+        ].filter(x => !!x)
+      }
       const handleCellMouseOver = (event) => { // external functions: getCoordsFromElement, getAdjacentCells, addClass
         const target = event.target;
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
         addClass( {input: { target:target, className:'hover'}, dependencies: {indexOf:'test'}}  )
 
-        const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
+        const adjacentCells = getAdjacentCells({ input: {coords: coords}, dependencies: {getElementFromCoords: getElementFromCoords} })
         adjacentCells.forEach(cell => {
           addClass( {input: { target:cell, className:'adjacent'}, dependencies: {indexOf:'test'}} )
         })
@@ -72,7 +74,7 @@ const honeyCanvas = (() => {
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
 
         removeClass({ inputs: {target: target, value:'hover'}, dependencies: 'test'})
-        const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
+        const adjacentCells = getAdjacentCells({ input: {coords: coords}, dependencies: {getElementFromCoords: getElementFromCoords} })
         adjacentCells.forEach(cell => {
           removeClass({ inputs: {target: cell, value:'adjacent'},dependencies: 'test'})
         })
