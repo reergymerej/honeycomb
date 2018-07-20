@@ -23,11 +23,10 @@ const honeyCanvas = (() => {
       const padding = paddingNum
       const size = sizeNum
 
-
       const addClass = ({inputs, dependencies}) => { // external functions: global:indexOf
         element=inputs.target;
         className=inputs.value;
-        console.log('frog says so, ', inputs, dependencies)
+        // console.log('frog says so, ', inputs, dependencies)
         if (element.className.indexOf(className) === -1) {
           element.className += (' ' + className) } }
       const removeClass = ({inputs, dependencies}) => {  // external functions: global: split, filter, join
@@ -35,7 +34,7 @@ const honeyCanvas = (() => {
         className=inputs.value;
         element.className = element.className.split(' ').filter(x => x !== className).join(' ') }
       const getElementFromCoords = ({input: coords, dependencies}) => { // external functions: non global: elements, done,
-        console.log(coords, dependencies)
+        // console.log(coords, dependencies)
         const row = dependencies.elements[coords.y]
         if (row) { const element = row[coords.x]; return element }
       }
@@ -57,7 +56,6 @@ const honeyCanvas = (() => {
           getElementFromCoords({ input: { x: ex, y: sy }, dependencies: {elements} }), // SE
         ].filter(x => !!x) }
 
-
       const handleCellMouseOver = (event) => { // external functions: getCoordsFromElement, getAdjacentCells, addClass
         const target = event.target;
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
@@ -76,27 +74,34 @@ const honeyCanvas = (() => {
           removeClass({ inputs:{target:cell, value:'adjacent'},dependencies: 'test'})
         })
       }
-      const cellFactory = (filled, columnIndex, rowIndex) => { // external functions: handleCellMouseOver, handleCellMouseOut
+      const cellFactory = ({inputs, dependencies}) => { // external functions: handleCellMouseOver, handleCellMouseOut
+        // console.log(inputs)
+        let {filled, columnIndex, rowIndex} = inputs
+
         const div = document.createElement('div')
         const className = 'cell' + (filled ? ' filled' : '')
         div.className = className
         if (filled) {
-          div.addEventListener('mouseover', handleCellMouseOver)
-          div.addEventListener('mouseout', handleCellMouseOut)
+          div.addEventListener('mouseover', dependencies.handleCellMouseOver)
+          div.addEventListener('mouseout', dependencies.handleCellMouseOut)
         }
         div.setAttribute('data-columnIndex', columnIndex)
         div.setAttribute('data-rowIndex', rowIndex)
         return div
       }
 
-      const penToPaper = ((hive, cellFactory, size, padding, root, elements) => {
+      const penToPaper = (({inputs, dependencies}) => {
+        let {size, padding, root, elements} = inputs;
+        let {hive, cellFactory} = dependencies;
         hive.forEach((row, rowIndex) => {
           const elementRow = []
           row.forEach((value, columnIndex) => {
-            const cell = cellFactory(!!value, columnIndex, rowIndex)
+            const cell = cellFactory({
+              inputs: { filled:value, columnIndex:columnIndex, rowIndex:rowIndex},
+              dependencies: { handleCellMouseOver, handleCellMouseOut }
+            })
             const x = (columnIndex * 3 / 4 * size) + padding * columnIndex
-            const y = (rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * size) : 0)) +
-              padding * rowIndex
+            const y = (rowIndex * size + (columnIndex % 2 === 1 ? (1 / 2 * size) : 0)) + padding * rowIndex
             cell.style.left = x + 'px'
             cell.style.top = y + 'px'
             elementRow.push(cell)
@@ -105,7 +110,11 @@ const honeyCanvas = (() => {
           elements.push(elementRow)
         })
       })
-      penToPaper(hive, cellFactory, size, padding, root, elements)
+
+      penToPaper({
+        inputs: {size: size, padding: padding, root:root, elements:elements},
+        dependencies: {hive: hive, cellFactory: cellFactory}
+      })
     }
     return {
       hive: hive,
