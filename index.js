@@ -24,10 +24,11 @@ const honeyCanvas = (() => {
       const size = sizeNum
 
       // IF ADDCLASS DOES NOT GET PASSED AN ELEMENT IT WILL BE A COOL DRAWING PLATFORM.
-      const addClass = ([element, className],[indexOf]) => { // external functions: global:indexOf
+      const addClass = ({input: {target: element, className}, dependencies:{indexOf} }) => { // external functions: global:indexOf
         if (element.className.indexOf(className) === -1) {
           element.className += (' ' + className)
-      } }
+        }
+      }
 
       const removeClass = ({ inputs, dependencies }) => {  // external functions: global: split, filter, join
         element=inputs.target;
@@ -39,6 +40,7 @@ const honeyCanvas = (() => {
         if (row) { const element = row[coords.x]; return element }
       }
       const getIntAttr = (element, attr) => { return parseInt(element.getAttribute(attr)) } // external functions: done, global functions parseInt, getAttribute
+
       const getCoordsFromElement = ({input: element, dependencies: getIntAttr}) => { // external functions: non global: getIntAttr
         const columnIndex = getIntAttr(element, 'data-columnIndex'); const rowIndex = getIntAttr(element, 'data-rowIndex')
         return { x: columnIndex, y: rowIndex } }
@@ -58,18 +60,21 @@ const honeyCanvas = (() => {
       const handleCellMouseOver = (event) => { // external functions: getCoordsFromElement, getAdjacentCells, addClass
         const target = event.target;
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
-        addClass( [ target, 'hover' ], [ 'test' ]  )
+        addClass( {input: { target:target, className:'hover'}, dependencies: {indexOf:'test'}}  )
+
         const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
-        adjacentCells.forEach(cell => { addClass( [ cell, 'adjacent' ], [ 'test' ] ) })
+        adjacentCells.forEach(cell => {
+          addClass( {input: { target:cell, className:'adjacent'}, dependencies: {indexOf:'test'}} )
+        })
       }
       const handleCellMouseOut = (event) => { // external functions: removeClass, getCoordsFromElement, getAdjacentCells
         const target = event.target
         const coords = getCoordsFromElement({ input: target, dependencies: getIntAttr })
 
-        removeClass({ inputs: {target:target, value:'hover'}, dependencies: 'test'})
+        removeClass({ inputs: {target: target, value:'hover'}, dependencies: 'test'})
         const adjacentCells = getAdjacentCells({ input: coords, dependencies: getElementFromCoords })
         adjacentCells.forEach(cell => {
-          removeClass({ inputs:{target:cell, value:'adjacent'},dependencies: 'test'})
+          removeClass({ inputs: {target: cell, value:'adjacent'},dependencies: 'test'})
         })
       }
       const cellFactory = ({inputs, dependencies}) => { // external functions: handleCellMouseOver, handleCellMouseOut
